@@ -1,65 +1,103 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Header */}
+      <header className="bg-slate-900/50 backdrop-blur-sm border-b border-purple-500/20">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+            📈 Stock Analyzer Pro
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+          <p className="text-slate-300 mt-2">AI-Powered Stock Analysis & Insights</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 py-12">
+        {/* Search Box */}
+        <div className="bg-slate-800/50 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500/20">
+          <h2 className="text-2xl font-semibold text-white mb-6">
+            Analyze Any Stock
+          </h2>
+          
+          <div className="flex gap-4">
+            <input
+              type="text"
+              placeholder="Enter stock ticker (e.g., AAPL, TSLA, NVDA)"
+              className="flex-1 px-6 py-4 bg-slate-900 text-white rounded-xl border border-purple-500/30 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-lg"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <button className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-purple-500/50 transition-all duration-200 transform hover:scale-105">
+              Analyze
+            </button>
+          </div>
+
+          {/* Quick Stats Preview */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div className="bg-slate-900/50 rounded-xl p-6 border border-purple-500/20">
+              <p className="text-slate-400 text-sm mb-2">Analysis Type</p>
+              <p className="text-white text-xl font-semibold">Comprehensive</p>
+            </div>
+            <div className="bg-slate-900/50 rounded-xl p-6 border border-purple-500/20">
+              <p className="text-slate-400 text-sm mb-2">Time Horizon</p>
+              <p className="text-white text-xl font-semibold">Long-term</p>
+            </div>
+            <div className="bg-slate-900/50 rounded-xl p-6 border border-purple-500/20">
+              <p className="text-slate-400 text-sm mb-2">Risk Level</p>
+              <p className="text-white text-xl font-semibold">Moderate</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Features Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
+            <div className="text-4xl mb-4">📊</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Technical Analysis</h3>
+            <p className="text-slate-400">Advanced charts, indicators, and pattern recognition</p>
+          </div>
+
+          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
+            <div className="text-4xl mb-4">💼</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Fundamental Analysis</h3>
+            <p className="text-slate-400">Deep dive into financials, metrics, and company health</p>
+          </div>
+
+          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
+            <div className="text-4xl mb-4">🌍</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Macro Analysis</h3>
+            <p className="text-slate-400">Market trends, economic indicators, and global context</p>
+          </div>
+
+          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
+            <div className="text-4xl mb-4">💰</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Valuation Models</h3>
+            <p className="text-slate-400">DCF, multiples, and scenario-based pricing</p>
+          </div>
+
+          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
+            <div className="text-4xl mb-4">⚠️</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Risk Assessment</h3>
+            <p className="text-slate-400">Comprehensive risk analysis and mitigation strategies</p>
+          </div>
+
+          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
+            <div className="text-4xl mb-4">🎯</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Trade Recommendations</h3>
+            <p className="text-slate-400">Actionable insights with entry/exit strategies</p>
+          </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="bg-slate-900/50 backdrop-blur-sm border-t border-purple-500/20 mt-20">
+        <div className="max-w-7xl mx-auto px-4 py-8 text-center">
+          <p className="text-slate-400">
+            Built with Next.js, TypeScript, and Tailwind CSS
+          </p>
+          <p className="text-slate-500 text-sm mt-2">
+            Not financial advice. Always do your own research.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
