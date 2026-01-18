@@ -3,16 +3,14 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [ticker, setTicker] = useState('');
-  const [analysis, setAnalysis] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [ticker, setTicker] = useState<string>('');
+  const [analysis, setAnalysis] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
-  const handleAnalyze = async () => {
-    if (!ticker.trim()) {
-      setError('Please enter a stock ticker');
-      return;
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!ticker.trim()) return;
 
     setLoading(true);
     setError('');
@@ -24,150 +22,160 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ticker: ticker.toUpperCase() }),
+        body: JSON.stringify({ ticker: ticker.trim() }),
       });
 
       const data = await response.json();
 
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setAnalysis(data.analysis);
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to analyze stock');
       }
+
+      setAnalysis(data.analysis);
     } catch (err) {
-      setError('Failed to analyze stock. Please try again.');
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
-      <header className="bg-slate-900/50 backdrop-blur-sm border-b border-purple-500/20">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-            📈 Stock Analyzer Pro
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 mb-4">
+            Stock Analyzer
           </h1>
-          <p className="text-slate-300 mt-2">AI-Powered Stock Analysis & Insights</p>
+          <p className="text-slate-300 text-xl">
+            AI-Powered Comprehensive Stock Analysis
+          </p>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-12">
-        {/* Search Box */}
-        <div className="bg-slate-800/50 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500/20">
-          <h2 className="text-2xl font-semibold text-white mb-6">
-            Analyze Any Stock
-          </h2>
-          
-          <div className="flex gap-4">
+        <form onSubmit={handleSubmit} className="mb-8">
+          <div className="flex gap-4 max-w-2xl mx-auto">
             <input
               type="text"
               value={ticker}
-              onChange={(e) => setTicker(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleAnalyze()}
-              placeholder="Enter stock ticker (e.g., AAPL, TSLA, NVDA)"
-              className="flex-1 px-6 py-4 bg-slate-900 text-white rounded-xl border border-purple-500/30 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-lg"
+              onChange={(e) => setTicker(e.target.value.toUpperCase())}
+              placeholder="Enter stock ticker (e.g., AAPL, TSLA)"
+              className="flex-1 px-6 py-4 bg-slate-800/50 backdrop-blur-md border border-purple-500/30 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg"
               disabled={loading}
             />
-            <button 
-              onClick={handleAnalyze}
-              disabled={loading}
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-purple-500/50 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            <button
+              type="submit"
+              disabled={loading || !ticker.trim()}
+              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-lg"
             >
               {loading ? 'Analyzing...' : 'Analyze'}
             </button>
           </div>
+        </form>
 
-          {error && (
-            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
-              <p className="text-red-400">{error}</p>
-            </div>
-          )}
-
-          {/* Quick Stats Preview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div className="bg-slate-900/50 rounded-xl p-6 border border-purple-500/20">
-              <p className="text-slate-400 text-sm mb-2">Analysis Type</p>
-              <p className="text-white text-xl font-semibold">Comprehensive</p>
-            </div>
-            <div className="bg-slate-900/50 rounded-xl p-6 border border-purple-500/20">
-              <p className="text-slate-400 text-sm mb-2">Time Horizon</p>
-              <p className="text-white text-xl font-semibold">Long-term</p>
-            </div>
-            <div className="bg-slate-900/50 rounded-xl p-6 border border-purple-500/20">
-              <p className="text-slate-400 text-sm mb-2">Risk Level</p>
-              <p className="text-white text-xl font-semibold">Moderate</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Analysis Results */}
-        {analysis && (
-          <div className="mt-8 bg-slate-800/50 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500/20">
-            <h2 className="text-2xl font-semibold text-white mb-6">
-              Analysis Results for {ticker.toUpperCase()}
-            </h2>
-            <div className="prose prose-invert max-w-none">
-              <div className="text-slate-300 whitespace-pre-wrap leading-relaxed">
-                {analysis}
-              </div>
-            </div>
+        {error && (
+          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400">
+            {error}
           </div>
         )}
 
-        {/* Features Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
-            <div className="text-4xl mb-4">📊</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Technical Analysis</h3>
-            <p className="text-slate-400">Advanced charts, indicators, and pattern recognition</p>
+        {analysis && (
+          <div className="mt-8 bg-slate-800/50 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-purple-500/20">
+            <div className="flex items-center gap-4 mb-8 pb-6 border-b border-purple-500/30">
+              <div className="text-5xl">📊</div>
+              <div>
+                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                  Analysis Results
+                </h2>
+                <p className="text-slate-400 text-lg mt-1">{ticker.toUpperCase()}</p>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              {analysis.split('\n').map((line: string, index: number) => {
+                // Main header (single #)
+                if (line.trim().startsWith('# ') && !line.trim().startsWith('## ')) {
+                  return (
+                    <div key={index} className="mb-4">
+                      <h2 className="text-2xl font-bold text-white">
+                        {line.replace(/^#\s*/, '')}
+                      </h2>
+                    </div>
+                  );
+                }
+                
+                // Section headers (##)
+                if (line.trim().startsWith('## ')) {
+                  const headerText = line.replace(/^##\s*/, '');
+                  const headerNumber = headerText.match(/^(\d+)\./)?.[1];
+                  
+                  // Colors and icons for each section
+                  const sections: { [key: string]: { color: string; icon: string; bg: string } } = {
+                    '1': { color: 'from-blue-400 to-cyan-400', icon: '📋', bg: 'bg-blue-500/10 border-blue-500/30' },
+                    '2': { color: 'from-green-400 to-emerald-400', icon: '🌍', bg: 'bg-green-500/10 border-green-500/30' },
+                    '3': { color: 'from-purple-400 to-violet-400', icon: '💼', bg: 'bg-purple-500/10 border-purple-500/30' },
+                    '4': { color: 'from-yellow-400 to-orange-400', icon: '💰', bg: 'bg-yellow-500/10 border-yellow-500/30' },
+                    '5': { color: 'from-red-400 to-rose-400', icon: '⚠️', bg: 'bg-red-500/10 border-red-500/30' },
+                    '6': { color: 'from-pink-400 to-fuchsia-400', icon: '🎯', bg: 'bg-pink-500/10 border-pink-500/30' },
+                  };
+                  
+                  const section = sections[headerNumber || '1'] || sections['1'];
+                  
+                  return (
+                    <div key={index} className={`${section.bg} rounded-xl p-6 border mt-8`}>
+                      <div className="flex items-center gap-3">
+                        <span className="text-4xl">{section.icon}</span>
+                        <h3 className={`text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${section.color}`}>
+                          {headerText}
+                        </h3>
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Bold text (**text**)
+                if (line.includes('**')) {
+                  const parts = line.split(/(\*\*.*?\*\*)/g);
+                  return (
+                    <div key={index} className="text-slate-300 leading-relaxed mb-3">
+                      {parts.map((part: string, i: number) => {
+                        if (part.startsWith('**') && part.endsWith('**')) {
+                          return (
+                            <span key={i} className="font-bold text-white">
+                              {part.replace(/\*\*/g, '')}
+                            </span>
+                          );
+                        }
+                        return <span key={i}>{part}</span>;
+                      })}
+                    </div>
+                  );
+                }
+                
+                // Bullet points
+                if (line.trim().startsWith('- ')) {
+                  return (
+                    <div key={index} className="flex gap-3 mb-2 ml-4">
+                      <span className="text-purple-400 mt-1">•</span>
+                      <span className="text-slate-300 flex-1">{line.replace(/^-\s*/, '')}</span>
+                    </div>
+                  );
+                }
+                
+                // Regular text
+                if (line.trim()) {
+                  return (
+                    <p key={index} className="text-slate-300 leading-relaxed mb-3">
+                      {line}
+                    </p>
+                  );
+                }
+                
+                // Empty lines (spacing)
+                return <div key={index} className="h-2"></div>;
+              })}
+            </div>
           </div>
-
-          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
-            <div className="text-4xl mb-4">💼</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Fundamental Analysis</h3>
-            <p className="text-slate-400">Deep dive into financials, metrics, and company health</p>
-          </div>
-
-          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
-            <div className="text-4xl mb-4">🌍</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Macro Analysis</h3>
-            <p className="text-slate-400">Market trends, economic indicators, and global context</p>
-          </div>
-
-          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
-            <div className="text-4xl mb-4">💰</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Valuation Models</h3>
-            <p className="text-slate-400">DCF, multiples, and scenario-based pricing</p>
-          </div>
-
-          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
-            <div className="text-4xl mb-4">⚠️</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Risk Assessment</h3>
-            <p className="text-slate-400">Comprehensive risk analysis and mitigation strategies</p>
-          </div>
-
-          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all">
-            <div className="text-4xl mb-4">🎯</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Trade Recommendations</h3>
-            <p className="text-slate-400">Actionable insights with entry/exit strategies</p>
-          </div>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-slate-900/50 backdrop-blur-sm border-t border-purple-500/20 mt-20">
-        <div className="max-w-7xl mx-auto px-4 py-8 text-center">
-          <p className="text-slate-400">
-            Built with Next.js, TypeScript, Tailwind CSS, and Claude AI
-          </p>
-          <p className="text-slate-500 text-sm mt-2">
-            Not financial advice. Always do your own research.
-          </p>
-        </div>
-      </footer>
-    </div>
+        )}
+      </div>
+    </main>
   );
 }
