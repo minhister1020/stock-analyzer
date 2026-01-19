@@ -31,3 +31,39 @@ An AI-powered stock analysis web application that provides comprehensive equity 
 ```
 
 3. Create a `.env.local` file and add your API key
+
+4. Run the development server
+```bash
+   npm run dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## 🛠️ Built With
+
+- [Next.js](https://nextjs.org/) - React framework
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [Anthropic Claude API](https://www.anthropic.com/) - AI analysis
+- [Vercel](https://vercel.com/) - Deployment
+
+## 📝 How It Works
+
+1. Enter a stock ticker (e.g., AAPL, TSLA, NVDA)
+2. Click "Analyze"
+3. Receive a comprehensive analysis including:
+   - Company overview
+   - Financial health assessment
+   - Risk factors
+   - Investment considerations
+
+## 🤝 Contributing
+
+This is a learning project! Feel free to fork and experiment.
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+---
+
+**Built by Bobby** | Learning web development one project at a time 🚀
